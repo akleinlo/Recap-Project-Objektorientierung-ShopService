@@ -1,7 +1,9 @@
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,9 +13,10 @@ class OrderMapRepoTest {
     void getOrders() {
         //GIVEN
         OrderMapRepo repo = new OrderMapRepo();
+        Instant fixedTime = Instant.parse("2025-09-10T14:28:11.601170Z");
 
         Product product = new Product("1", "Apfel");
-        Order newOrder = new Order("1", List.of(product), Order.Status.PROCESSING);
+        Order newOrder = new Order("1", List.of(product), Order.Status.PROCESSING, fixedTime);
         repo.addOrder(newOrder);
 
         //WHEN
@@ -22,7 +25,7 @@ class OrderMapRepoTest {
         //THEN
         List<Order> expected = new ArrayList<>();
         Product product1 = new Product("1", "Apfel");
-        expected.add(new Order("1", List.of(product1), Order.Status.PROCESSING));
+        expected.add(new Order("1", List.of(product1), Order.Status.PROCESSING, fixedTime));
 
         assertEquals(actual, expected);
     }
@@ -31,17 +34,18 @@ class OrderMapRepoTest {
     void getOrderById() {
         //GIVEN
         OrderMapRepo repo = new OrderMapRepo();
+        Instant fixedTime = Instant.parse("2025-09-10T14:28:11.601170Z");
 
         Product product = new Product("1", "Apfel");
-        Order newOrder = new Order("1", List.of(product), Order.Status.PROCESSING);
+        Order newOrder = new Order("1", List.of(product), Order.Status.PROCESSING, fixedTime);
         repo.addOrder(newOrder);
 
         //WHEN
-        Order actual = repo.getOrderById("1");
+        Optional<Order> actual = repo.getOrderById("1");
 
         //THEN
         Product product1 = new Product("1", "Apfel");
-        Order expected = new Order("1", List.of(product1), Order.Status.PROCESSING);
+        Order expected = new Order("1", List.of(product1), Order.Status.PROCESSING, fixedTime);
 
         assertEquals(actual, expected);
     }
@@ -50,15 +54,16 @@ class OrderMapRepoTest {
     void addOrder() {
         //GIVEN
         OrderMapRepo repo = new OrderMapRepo();
+        Instant fixedTime = Instant.parse("2025-09-10T14:28:11.601170Z");
         Product product = new Product("1", "Apfel");
-        Order newOrder = new Order("1", List.of(product), Order.Status.PROCESSING);
+        Order newOrder = new Order("1", List.of(product), Order.Status.PROCESSING, fixedTime);
 
         //WHEN
         Order actual = repo.addOrder(newOrder);
 
         //THEN
         Product product1 = new Product("1", "Apfel");
-        Order expected = new Order("1", List.of(product1), Order.Status.PROCESSING);
+        Order expected = new Order("1", List.of(product1), Order.Status.PROCESSING, fixedTime);
         assertEquals(actual, expected);
         assertEquals(repo.getOrderById("1"), expected);
     }

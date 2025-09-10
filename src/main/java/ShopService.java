@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,11 @@ public class ShopService {
             products.add(maybeProduct.get());
         }
 
-        Order newOrder = new Order(UUID.randomUUID().toString(), products, Order.Status.PROCESSING);
+        Order newOrder = new Order(
+                UUID.randomUUID().toString(),
+                products,
+                Order.Status.PROCESSING,
+                Instant.now());
 
         return orderRepo.addOrder(newOrder);
     }
@@ -40,5 +45,19 @@ public class ShopService {
         return orderRepo.getOrders().stream()
                 .filter(o -> o.status() == status)
                 .collect(Collectors.toList());
+    }
+
+    public Order updateOrder(String orderID, Order.Status newStatus) {
+        Optional<Order> maybeOrder = orderRepo.getOrderById(orderID);
+
+        if (maybeOrder.isEmpty()) {
+            throw new IllegalArgumentException("Order mit ID " + orderID + " nicht gefunden!");
+        }
+
+        Order existingOrder = maybeOrder.get();
+        Order updatedOrder = existingOrder.withStatus(newStatus);
+        orderRepo.updateOrder(updatedOrder);
+
+        return updatedOrder;
     }
 }
