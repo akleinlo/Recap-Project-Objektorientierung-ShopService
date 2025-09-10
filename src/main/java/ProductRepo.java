@@ -27,6 +27,11 @@ public class ProductRepo {
         return newProduct;
     }
 
+    public List<Product> addProducts(List<Product> newProducts) {
+        products.addAll(newProducts);
+        return  newProducts;
+    }
+
     public void removeProduct(String id) {
         for (Product product : products) {
            if (product.id().equals(id)) {
