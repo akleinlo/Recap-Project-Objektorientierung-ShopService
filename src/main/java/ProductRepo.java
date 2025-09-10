@@ -34,11 +34,7 @@ public class ProductRepo {
     }
 
     public void removeProduct(String id) {
-        for (Product product : products) {
-           if (product.id().equals(id)) {
-               products.remove(product);
-               return;
-           }
-        }
+        products.removeIf(product -> product.id().equals(id));
     }
+
 }

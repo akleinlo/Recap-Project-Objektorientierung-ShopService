@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,27 +8,29 @@ class ProductRepoTest {
     void getProducts() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
+        repo.addProduct(new Product("1", "Apfel"));
 
         //WHEN
         List<Product> actual = repo.getProducts();
 
         //THEN
-        List<Product> expected = new ArrayList<>();
-        expected.add(new Product("1", "Apfel"));
-        assertEquals(actual, expected);
+        List<Product> expected = List.of(new Product("1", "Apfel"));
+        assertEquals(expected, actual);
     }
 
     @org.junit.jupiter.api.Test
     void getProductById() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
+        Product p = new Product("1", "Apfel");
+        repo.addProduct(p);
 
         //WHEN
-        Product actual = repo.getProductById("1");
+        Optional<Product> actual = repo.getProductById("1");
 
         //THEN
-        Product expected = new Product("1", "Apfel");
-        assertEquals(actual, expected);
+        assertTrue(actual.isPresent());
+        assertEquals(p, actual.get());
     }
 
     @org.junit.jupiter.api.Test
@@ -45,19 +44,22 @@ class ProductRepoTest {
 
         //THEN
         Product expected = new Product("2", "Banane");
-        assertEquals(actual, expected);
-        assertEquals(repo.getProductById("2"), expected);
+        assertEquals(expected, actual);
+        assertTrue(repo.getProductById("2").isPresent());
+        assertEquals(expected, repo.getProductById("2").get());
     }
 
     @org.junit.jupiter.api.Test
     void removeProduct() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
+        Product p = new Product("1", "Apfel");
+        repo.addProduct(p);
 
         //WHEN
         repo.removeProduct("1");
 
         //THEN
-        assertNull(repo.getProductById("1"));
+        assertTrue(repo.getProductById("1").isEmpty());
     }
 }
